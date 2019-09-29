@@ -1,0 +1,9 @@
+.idea/
+.ipynb_checkpoints/
+__pycache__/
+*.ipynb
+*.csv
+*.json
+ENV/
+.DS_Store
+docs/build/
