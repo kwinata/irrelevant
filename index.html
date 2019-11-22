@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>This is “Irrelevant!” &#8212; Irrelevant  documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="#">Irrelevant  documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="this-is-irrelevant">
+<h1>This is “Irrelevant!”<a class="headerlink" href="#this-is-irrelevant" title="Permalink to this headline">¶</a></h1>
+<p>This is an excerpt from a project on my intern at Shopee. This is a simple approach to help
+eliminate wrongly categorized product within the platform by using the term frequency. A previous approach
+using SVM has been tried but was not pursued further because of difficulty in rule extraction.</p>
+<p>To generate the html documentation, run the <code class="docutils literal notranslate"><span class="pre">compile.sh</span></code> script (after installing the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>).
+To test, just run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">irrelevant/irrelevant.py</span> <span class="pre">-v</span></code>.</p>
+<div class="section" id="code-api-documentation">
+<h2>Code API documentation<a class="headerlink" href="#code-api-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="irrelevant.irrelevant.Irrelevant">
+<em class="property">class </em><code class="sig-prename descclassname">irrelevant.irrelevant.</code><code class="sig-name descname">Irrelevant</code><span class="sig-paren">(</span><em class="sig-param">relevant_dominance=4.0</em>, <em class="sig-param">relevant_tf=0.001</em>, <em class="sig-param">clash_dominance=10.0</em>, <em class="sig-param">clash_tf=0.005</em>, <em class="sig-param">maximum_clash_in_relevant=0.05</em>, <em class="sig-param">n_relevant=50</em>, <em class="sig-param">n_clash=30</em>, <em class="sig-param">initial_keywords=None</em><span class="sig-paren">)</span><a class="headerlink" href="#irrelevant.irrelevant.Irrelevant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find wrongly categorized products.</p>
+<p>The strategy used is based on the difference of likelihood of a keyword
+to appear in each of the category. We will take a keyword as a ‘determining keyword’ if the difference is
+significant.</p>
+<p>For example, let us consider an imaginary brand ‘Good_cheap’ and we are classifying
+between ‘Dress’ and ‘Watch’. If the brand ‘Good_cheap’ production is 80% ‘Watch’ and 20% ‘Dress’, we won’t be
+brave enough to judge that everything that contains the brand name ‘Good_cheap’ is watch. But if ‘Good_cheap’
+main product line is 99% ‘Watch’ with only some exceptional special edition ‘Dress’, we will be brave enough
+to use the brand name as determining factor/keyword.</p>
+<p>This module compare not between two categories, but a category with <strong>the rest</strong> (complement of the category), i.e.
+when there is only two category, those cases are equivalent.</p>
+<p>There is two ‘main’ way to use this class, one is to set the training parameter or using initial_keywords
+to directly inject the determining keywords.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>relevant_dominance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – minimum ratio of P(keyword in relevant)/P(keyword in clash) for relevant keyword</p></li>
+<li><p><strong>relevant_tf</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – minimum P(keyword in relevant) for relevant keyword</p></li>
+<li><p><strong>clash_dominance</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – minimum ratio of P(keyword in clash)/P(keyword in clash) for clash keyword</p></li>
+<li><p><strong>clash_tf</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – minimum P(keyword in clash) for clash keyword</p></li>
+<li><p><strong>maximum_clash_in_relevant</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – maximum P(keyword in relevant) for clash keyword</p></li>
+<li><p><strong>n_relevant</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – maximum number of top relevant keywords taken (ordered based on term frequency)</p></li>
+<li><p><strong>n_clash</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – maximum number of top clash keywords taken (ordered based on ratio / bias strength)</p></li>
+<li><p><strong>initial_keywords</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]]) – A dict of label as key and lists of relevant and clash keywords as dictionary.
+This parameter is used to use the <cite>judge</cite> method without fitting.
+e.g.: <cite>{‘label1’: {‘relevant’: [‘shirt’, ‘tee’, ‘skirt’, ‘jacket’], ‘clash’: [‘bag’, ‘shoes’]}}</cite></p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cspam</span> <span class="o">=</span> <span class="n">Irrelevant</span><span class="p">(</span><span class="n">relevant_dominance</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">clash_dominance</span><span class="o">=</span><span class="mf">20.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cspam</span><span class="o">.</span><span class="n">judge</span><span class="p">([</span><span class="s1">&#39;Black shirt&#39;</span><span class="p">,</span> <span class="s1">&#39;Black shoes&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;clothes&#39;</span><span class="p">,</span> <span class="s1">&#39;clothes&#39;</span><span class="p">])</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">Model untrained or trained with empty data.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cspam</span><span class="o">.</span><span class="n">fit</span><span class="p">([</span><span class="s1">&#39;Red Shirt number 1&#39;</span><span class="p">,</span> <span class="s1">&#39;Red shoes&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;clothes&#39;</span><span class="p">,</span> <span class="s1">&#39;footwear&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cspam</span><span class="o">.</span><span class="n">judge</span><span class="p">([</span><span class="s1">&#39;Black shirt&#39;</span><span class="p">,</span> <span class="s1">&#39;Black shoes&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;clothes&#39;</span><span class="p">,</span> <span class="s1">&#39;clothes&#39;</span><span class="p">])</span>
+<span class="go">[set(), {&#39;shoes&#39;}]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">keywords_</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;label1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;relevant&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;shirt&#39;</span><span class="p">,</span> <span class="s1">&#39;tee&#39;</span><span class="p">],</span> <span class="s1">&#39;clash&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;bag&#39;</span><span class="p">,</span> <span class="s1">&#39;shoes&#39;</span><span class="p">]}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cspam</span> <span class="o">=</span> <span class="n">Irrelevant</span><span class="p">(</span><span class="n">initial_keywords</span><span class="o">=</span><span class="n">keywords_</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cspam</span><span class="o">.</span><span class="n">judge</span><span class="p">([</span><span class="s1">&#39;red shirt&#39;</span><span class="p">,</span> <span class="s1">&#39;black shoes&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;label1&#39;</span><span class="p">,</span> <span class="s1">&#39;label1&#39;</span><span class="p">])</span>
+<span class="go">[set(), {&#39;shoes&#39;}]</span>
+</pre></div>
+</div>
+<dl class="method">
+<dt id="irrelevant.irrelevant.Irrelevant.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="headerlink" href="#irrelevant.irrelevant.Irrelevant.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method will calculate and store the determining keywords directly to <code class="docutils literal notranslate"><span class="pre">self.keywords_</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpus</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – the texts to be analyzed</p></li>
+<li><p><strong>y</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code>]) – the labels for each text in the corpus</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If <cite>corpus</cite> length is not equal to <cite>y</cite></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cspam</span> <span class="o">=</span> <span class="n">Irrelevant</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cspam</span><span class="o">.</span><span class="n">fit</span><span class="p">([</span><span class="s1">&#39;Red Shirt number 1&#39;</span><span class="p">,</span> <span class="s1">&#39;Red shoes&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;clothes&#39;</span><span class="p">,</span> <span class="s1">&#39;footwear&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cspam</span><span class="o">.</span><span class="n">fit</span><span class="p">([</span><span class="s1">&#39;Red Shirt number 1&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;clothes&#39;</span><span class="p">,</span> <span class="s1">&#39;footwear&#39;</span><span class="p">])</span> <span class="c1"># uneven length</span>
+<span class="gt">Traceback (most recent call last):</span>
+    <span class="o">...</span>
+<span class="gr">ValueError</span>: <span class="n">Uneven length of corpus and y</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cspam</span><span class="o">.</span><span class="n">judge</span><span class="p">([</span><span class="s1">&#39;Black shirt&#39;</span><span class="p">,</span> <span class="s1">&#39;Black shoes&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;clothes&#39;</span><span class="p">,</span> <span class="s1">&#39;clothes&#39;</span><span class="p">])</span> <span class="c1"># retains last successful fit</span>
+<span class="go">[set(), {&#39;shoes&#39;}]</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="irrelevant.irrelevant.Irrelevant.judge">
+<code class="sig-name descname">judge</code><span class="sig-paren">(</span><em class="sig-param">corpus</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="headerlink" href="#irrelevant.irrelevant.Irrelevant.judge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Judge whether a corpus is miscategorized or not. Will return a list of set, with empty set denoting there is
+no clash and set of keywords denoting the <cite>clash</cite> keywords.</p>
+<p>This method works by using the logic <cite>miscategorized if not relevant, and clashed</cite>. So there is two condition
+for a text to be considered as miscategorized:</p>
+<ol class="arabic simple">
+<li><p>The text must not contain any relevant keyword.</p></li>
+<li><p>The text must contain some clash keyword.</p></li>
+</ol>
+<p>Here is the reason of why we should use both condition:</p>
+<ol class="arabic simple">
+<li><p>If the condition <cite>The text does not contain any relevant keyword</cite> suffices for miscategorization,          we will face problem with some product that only contain its brand name, e.g.          <code class="docutils literal notranslate"><span class="pre">fipper</span> <span class="pre">wide</span> <span class="pre">blue</span></code>, <code class="docutils literal notranslate"><span class="pre">nike</span> <span class="pre">air</span> <span class="pre">jordan</span></code>, <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">champ</span></code>. If we use this condition, those item will be          considered as miscategorized as they lack the ‘relevant’ keyword like <code class="docutils literal notranslate"><span class="pre">slipper</span></code>, <code class="docutils literal notranslate"><span class="pre">shoes</span></code>, <code class="docutils literal notranslate"><span class="pre">bag</span></code>, resp.</p></li>
+<li><p>If the condition <cite>The text does not contain any relevant keyword</cite> suffices for miscategorization,          then text such as <code class="docutils literal notranslate"><span class="pre">nike</span> <span class="pre">bag</span> <span class="pre">with</span> <span class="pre">free</span> <span class="pre">shirt</span></code>, <code class="docutils literal notranslate"><span class="pre">women</span> <span class="pre">tee</span> <span class="pre">with</span> <span class="pre">baby</span> <span class="pre">picture</span></code> may be wrongly miscategorized          as <code class="docutils literal notranslate"><span class="pre">bag</span></code> and <code class="docutils literal notranslate"><span class="pre">children</span></code> (instead of <code class="docutils literal notranslate"><span class="pre">adult</span></code>).</p></li>
+</ol>
+<p>This method checks for exact match for ‘clash keywords’ and checks <cite>circumfix</cite> for ‘relevant keywords’.
+This means that keyword ‘shoe’ will match all of ‘shoe’, ‘shoes’, ‘runningshoes’ as a ‘relevant keyword’ but
+will only match ‘shoe’ (and not ‘shoes’ or ‘runningshoes’) as a ‘clash keyword’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>corpus</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – the list of texts to be judged</p></li>
+<li><p><strong>y</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code>]) – the current labels for each text in <code class="docutils literal notranslate"><span class="pre">corpus</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The set of intersection of clash keywords with each text in <code class="docutils literal notranslate"><span class="pre">corpus</span></code> according to the label in <code class="docutils literal notranslate"><span class="pre">y</span></code></p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the model is untrained and not initialized with <code class="docutils literal notranslate"><span class="pre">initial_keywords</span></code></p></li>
+<li><p><strong>ValueError</strong> – If there is a label in the <code class="docutils literal notranslate"><span class="pre">y</span></code> that is not in <code class="docutils literal notranslate"><span class="pre">self.classes_</span></code></p></li>
+<li><p><strong>ValueError</strong> – If the length of <code class="docutils literal notranslate"><span class="pre">corpus</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code> is different</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">keywords_</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;clothes&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;relevant&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;shirt&#39;</span><span class="p">,</span> <span class="s1">&#39;tee&#39;</span><span class="p">],</span> <span class="s1">&#39;clash&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;bag&#39;</span><span class="p">,</span> <span class="s1">&#39;shoes&#39;</span><span class="p">]}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cspam</span> <span class="o">=</span> <span class="n">Irrelevant</span><span class="p">(</span><span class="n">initial_keywords</span><span class="o">=</span><span class="n">keywords_</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">corpus</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Red shirt&#39;</span><span class="p">,</span> <span class="s1">&#39;Good magictees&#39;</span><span class="p">,</span> <span class="s1">&#39;tee bag&#39;</span><span class="p">,</span> <span class="s1">&#39;black baggy&#39;</span><span class="p">,</span> <span class="s1">&#39;black bag&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;clothes&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">corpus</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cspam</span><span class="o">.</span><span class="n">judge</span><span class="p">(</span><span class="n">corpus</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="go">[set(), set(), set(), set(), {&#39;bag&#39;}]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">This is “Irrelevant!”</a><ul>
+<li><a class="reference internal" href="#code-api-documentation">Code API documentation</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="#">Irrelevant  documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2019, Kevin Winata.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+    </div>
+  </body>
+</html>
